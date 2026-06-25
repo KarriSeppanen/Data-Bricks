@@ -1,0 +1,389 @@
+{
+  "datasets": [
+    {
+      "name": "e6deb41a",
+      "displayName": "Most Global Sales",
+      "queryLines": [
+        "select name, Platform, Global_Sales\r\n",
+        "from videogame_sales_csv\r\n",
+        "order by Global_Sales desc\r\n",
+        "limit 10"
+      ],
+      "catalog": "dataengineering",
+      "schema": "videogamesales"
+    },
+    {
+      "name": "d11ba263",
+      "displayName": "Video Game Sales by Region Analysis",
+      "queryLines": [
+        "select\r\n",
+        "  'North America' as Continent, sum(NA_Sales) as Total_Sales,\r\n",
+        "  (sum(NA_Sales) / sum(Global_Sales) * 100) as Percent_of_Global_Sales\r\n",
+        "from videogame_sales_csv\r\n",
+        "union all\r\n",
+        "select\r\n",
+        "  'Europe' as Continent, sum(EU_Sales) as Total_Sales,\r\n",
+        "  (sum(EU_Sales) / sum(Global_Sales) * 100) as Percent_of_Global_Sales\r\n",
+        "from videogame_sales_csv\r\n",
+        "union all\r\n",
+        "select\r\n",
+        "  'Japan' as Continent, sum(JP_Sales) as Total_Sales,\r\n",
+        "  (sum(JP_Sales) / sum(Global_Sales) * 100) as Percent_of_Global_Sales\r\n",
+        "from videogame_sales_csv\r\n",
+        "union all\r\n",
+        "select\r\n",
+        "  'Other' as Continent, sum(Other_Sales) as Total_Sales,\r\n",
+        "  (sum(Other_Sales) / sum(Global_Sales) * 100) as Percent_of_Global_Sales\r\n",
+        "from videogame_sales_csv\r\n",
+        "  "
+      ],
+      "catalog": "dataengineering",
+      "schema": "videogamesales"
+    },
+    {
+      "name": "37410344",
+      "displayName": "Total Global Sales compared to Genre",
+      "queryLines": [
+        "select Genre, sum(Global_Sales) as Total_Global_Sales\r\n",
+        "from videogame_sales_csv\r\n",
+        "group by Genre\r\n",
+        "order by Total_Global_Sales desc"
+      ],
+      "catalog": "dataengineering",
+      "schema": "videogamesales"
+    },
+    {
+      "name": "75287deb",
+      "displayName": "General Sales Each Year",
+      "queryLines": [
+        "select  Year, sum(Global_Sales) as Total_Global_Sales\r\n",
+        "from videogame_sales_csv\r\n",
+        "group by Year"
+      ],
+      "catalog": "dataengineering",
+      "schema": "videogamesales"
+    },
+    {
+      "name": "e825e026",
+      "displayName": "5 Most popular publishers and their global sales",
+      "queryLines": [
+        "Select Publisher, sum(Global_Sales) as Global_Total_Sales from \r\n",
+        "videogame_sales_csv\r\n",
+        "group by Publisher\r\n",
+        "order by sum(Global_Sales) desc\r\n",
+        "limit 5\r\n"
+      ],
+      "catalog": "dataengineering",
+      "schema": "videogamesales"
+    }
+  ],
+  "pages": [
+    {
+      "name": "47829a04",
+      "displayName": "Untitled page",
+      "layout": [
+        {
+          "widget": {
+            "name": "ba26512c",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e6deb41a",
+                  "fields": [
+                    {
+                      "name": "Global_Sales",
+                      "expression": "`Global_Sales`"
+                    },
+                    {
+                      "name": "name",
+                      "expression": "`name`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Global_Sales",
+                  "displayName": "Sales Total",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "name",
+                  "displayName": "Game Name",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "b03010b9",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "d11ba263",
+                  "fields": [
+                    {
+                      "name": "Percent_of_Global_Sales",
+                      "expression": "`Percent_of_Global_Sales`"
+                    },
+                    {
+                      "name": "Continent",
+                      "expression": "`Continent`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "Percent_of_Global_Sales",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Continent",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "0c66a895",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "37410344",
+                  "fields": [
+                    {
+                      "name": "sum(Total_Global_Sales)",
+                      "expression": "SUM(`Total_Global_Sales`)"
+                    },
+                    {
+                      "name": "Genre",
+                      "expression": "`Genre`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(Total_Global_Sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "Genre",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 7,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "f66b1bd4",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "75287deb",
+                  "fields": [
+                    {
+                      "name": "Year",
+                      "expression": "`Year`"
+                    },
+                    {
+                      "name": "sum(Total_Global_Sales)",
+                      "expression": "SUM(`Total_Global_Sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "Year",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(Total_Global_Sales)",
+                  "axis": {
+                    "title": "Total Global Sales"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 6,
+            "width": 5,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "220e7678",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e825e026",
+                  "fields": [
+                    {
+                      "name": "sum(Global_Total_Sales)",
+                      "expression": "SUM(`Global_Total_Sales`)"
+                    },
+                    {
+                      "name": "Publisher",
+                      "expression": "`Publisher`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(Global_Total_Sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Publisher",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 7,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "b992c4ce",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "8f65552a",
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {},
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
